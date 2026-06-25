@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  <!-- Preconnect to font origins for faster DNS/TLS resolution -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="{{ page_description | default: shop.description | escape }}">
+  {% if page_image %}
+    <meta property="og:image" content="http:{{ page_image | image_url: width: 1200 }}">
+    <meta property="og:image:secure_url" content="https:{{ page_image | image_url: width: 1200 }}">
+  {% endif %}
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title }}">
+  <meta name="twitter:description" content="{{ page_description | default: shop.description | escape }}">
+
+  <!-- Favicon -->
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- else -%}
+    <link rel="icon" type="image/png" href="{{ 'favicon.png' | asset_url }}">
+  {%- endif -%}
+
+  <!-- Preload critical stylesheet for fastest render -->
+  <link rel="preload" href="{{ 'style.css' | asset_url }}" as="style" onload="this.rel='stylesheet'">
+  <noscript>{{ 'style.css' | asset_url | stylesheet_tag }}</noscript>
+  <!-- Custom Fonts with font-display:swap to prevent invisible text -->
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap">
+  </noscript>
+
+  <!-- Shopify System Header (Required) -->
+  {{ content_for_header }}
+
+  <!-- Dynamic Assets Map for JS -->
+  <script>
+    window.ManSeriesAssets = {
+      fw: "{{ 'Transparent_Facewash.png' | asset_url }}",
+      sr: "{{ 'Transparent_Serum.png' | asset_url }}",
+      ss: "{{ 'Transparent_Sunscreen.png' | asset_url }}"
+    };
+  </script>
+
+  <!-- Shopify Native Policy Page Styling (Clean Editorial Layout) -->
+  <style>
+    /* ── Container: clears fixed header (40px bar + 72px nav = 112px) + 4rem breathing room ── */
+    .shopify-policy__container {
+      padding-top: calc(112px + 4rem) !important;
+      padding-left: 2rem !important;
+      padding-right: 2rem !important;
+      padding-bottom: 6rem !important;
+      max-width: 720px !important;
+      margin: 0 auto 4rem !important;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      box-sizing: border-box !important;
+    }
+
+    /* ── Title ── */
+    .shopify-policy__title {
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+      margin-bottom: 1rem !important;
+    }
+
+    .shopify-policy__title h1 {
+      font-family: var(--font-display) !important;
+      font-size: clamp(2.4rem, 5vw, 3.6rem) !important;
+      letter-spacing: -1.5px !important;
+      margin: 0 0 0.8rem 0 !important;
+      color: var(--charcoal) !important;
+      font-weight: normal !important;
+      line-height: 1.1 !important;
+      text-transform: none !important;
+    }
+
+    /* ── Sage rule after title ── */
+    .shopify-policy__title + .shopify-policy__body::before {
+      content: "" !important;
+      display: block !important;
+      width: 48px !important;
+      height: 2px !important;
+      background: var(--sage) !important;
+      margin-bottom: 1.5rem !important;
+    }
+
+    /* ── Body text ── */
+    .shopify-policy__body {
+      line-height: 1.75 !important;
+      color: rgba(20, 20, 19, 0.75) !important;
+      font-size: 1rem !important;
+      font-family: var(--font-body) !important;
+    }
+
+    .shopify-policy__body p {
+      margin-bottom: 1.4rem !important;
+      color: rgba(20, 20, 19, 0.75) !important;
+    }
+
+    /* ── Headings — force off ALL CAPS ── */
+    .shopify-policy__body h2,
+    .shopify-policy__body h3,
+    .shopify-policy__body h4 {
+      font-family: var(--font-heading) !important;
+      font-weight: 700 !important;
+      color: var(--charcoal) !important;
+      display: block !important;
+      margin-bottom: 0.8rem !important;
+      line-height: 1.25 !important;
+      letter-spacing: -0.3px !important;
+      text-transform: none !important;
+    }
+
+    .shopify-policy__body h2 {
+      font-size: 1.2rem !important;
+      margin-top: 3rem !important;
+      padding-top: 2rem !important;
+      border-top: 1px solid var(--border-warm) !important;
+    }
+
+    .shopify-policy__body h3 {
+      font-size: 1.05rem !important;
+      margin-top: 2rem !important;
+    }
+
+    /* ── Bold / section labels — convert CAPS to Title Case ── */
+    .shopify-policy__body strong,
+    .shopify-policy__body b {
+      font-weight: 600 !important;
+      color: var(--charcoal) !important;
+      display: inline !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      text-transform: capitalize !important;
+    }
+
+    /* ── Paragraph text — suppress ALL CAPS blocks ── */
+    .shopify-policy__body p {
+      text-transform: lowercase !important;
+    }
+
+    /* ── But restore normal case for short/normal paragraphs via first-letter ── */
+    .shopify-policy__body p::first-letter {
+      text-transform: uppercase !important;
+    }
+
+    /* ── Lists ── */
+    .shopify-policy__body ul,
+    .shopify-policy__body ol {
+      padding-left: 1.2rem !important;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .shopify-policy__body li {
+      margin-bottom: 0.5rem !important;
+      line-height: 1.7 !important;
+      color: rgba(20, 20, 19, 0.75) !important;
+    }
+
+    /* ── Links ── */
+    .shopify-policy__body a {
+      color: var(--sage-dark) !important;
+      text-decoration: none !important;
+      border-bottom: 1px solid rgba(90, 115, 99, 0.3) !important;
+      transition: all 0.3s ease !important;
+      font-weight: 500 !important;
+    }
+
+    .shopify-policy__body a:hover {
+      color: var(--charcoal) !important;
+      border-bottom-color: var(--charcoal) !important;
+    }
+
+    /* ── Blockquote ── */
+    .shopify-policy__body blockquote {
+      margin: 1.5rem 0 2rem !important;
+      padding: 1.4rem 1.8rem !important;
+      background: var(--sage-light) !important;
+      border-left: 3px solid var(--sage) !important;
+      border-radius: 0 8px 8px 0 !important;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      .shopify-policy__container {
+        padding-top: calc(112px + 2.5rem) !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        padding-bottom: 4rem !important;
+      }
+      .shopify-policy__title h1 {
+        font-size: 2rem !important;
+      }
+    }
+  </style>
+
+
+
+  <!-- Custom JS (defer = non-blocking, loads after HTML parsed) -->
+  <script src="{{ 'app.js' | asset_url }}" defer="defer"></script>
+</head>
+
+<body>
+  <!-- Custom Cursor Glow -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="cartToast">
+    <div class="toast-dot"></div>
+    <span id="toastMessage">Product added to routine!</span>
+  </div>
+
+  <!-- Cart Drawer Overlay -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <!-- Cart Drawer Sidebar -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3>Your Routine</h3>
+      <button class="close-cart-btn" id="closeCartBtn" aria-label="Close Cart">&times;</button>
+    </div>
+    
+    <!-- Shipping Progress -->
+    <div class="shipping-progress">
+      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px; font-family: var(--font-heading);">
+        <span id="drawerShippingMessage">
+          Add <span class="highlight">₹499.00</span> more for <span class="highlight">free shipping</span>
+        </span>
+        <span id="drawerShippingPercent" style="font-weight:600;">0%</span>
+      </div>
+      <div class="shipping-bar-bg">
+        <div class="shipping-fill" id="drawerShippingFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Items Container -->
+    <div class="cart-items-container" id="drawerCartItemsContainer">
+      <!-- Dynamically filled via Javascript -->
+    </div>
+
+    <!-- Footer -->
+    <div class="cart-drawer-footer" id="drawerCartFooter" style="display: none;">
+      <div class="cart-summary-details" style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.2rem; border-top: 1px solid var(--border-warm); padding-top: 1.2rem; margin-bottom: 0.8rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); font-family: var(--font-heading);">
+          <span>Subtotal</span>
+          <span id="drawerCartSubtotalValue">₹0.00</span>
+        </div>
+      </div>
+      
+      <div class="cart-total-row" style="border-top: 1px solid var(--border-warm); padding-top: 0.8rem;">
+        <span>Total Pay</span>
+        <span id="drawerCartTotalValue">₹0.00</span>
+      </div>
+      
+      <!-- Checkout Link to Custom Checkout Page -->
+      <a href="/pages/checkout" class="checkout-btn" id="checkoutBtn" style="text-decoration: none;">Proceed to Checkout</a>
+      <button class="continue-btn" id="drawerContinueBtn">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- Announcement Bar Section -->
+  {% section 'announcement-bar' %}
+
+  <!-- Header Section -->
+  {% section 'header' %}
+
+  <!-- Main Content Layout (Shopify injects templates here) -->
+  <main role="main" id="MainContent">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- Footer Section -->
+  {% section 'footer' %}
+</body>
+</html>

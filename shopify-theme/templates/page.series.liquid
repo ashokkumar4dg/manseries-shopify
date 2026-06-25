@@ -1,0 +1,244 @@
+{% assign facewash_product = all_products['facewash'] %}
+{% assign serum_product = all_products['serum'] %}
+{% assign sunscreen_product = all_products['sunscreen'] %}
+
+<!-- ═══════════════════════════════════════════════
+     PAGE HERO BANNER
+     ═══════════════════════════════════════════════ -->
+<section class="page-hero" style="background: var(--cream); padding: 10rem 0 4rem; text-align: center;">
+  <div class="container">
+    <span class="eyebrow" style="color: var(--sage-dark); display:block; margin-bottom:1rem;">THE COLLECTION</span>
+    <h1 style="font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 1rem; line-height: 1;">
+      <span class="line-normal">Grab Your</span>
+      <span class="line-italic">Series</span>
+    </h1>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SERIES — Filter & Sort + Products
+     ═══════════════════════════════════════════════ -->
+<section class="series-section" id="series-section" style="padding-top: 4rem;">
+  <div class="container">
+
+    <!-- Filter & Sort Bar -->
+    <div class="filter-sort-bar reveal">
+      <div class="filter-group">
+        <span class="filter-label">Filter:</span>
+        <div class="filter-dropdown" id="filterAvailability">
+          <button class="filter-btn" onclick="toggleDropdown('availDropdown')">
+            Availability
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="dropdown-menu" id="availDropdown">
+            <label class="dropdown-item"><input type="checkbox" value="available" checked> In Stock</label>
+            <label class="dropdown-item"><input type="checkbox" value="launching"> Launching Soon</label>
+          </div>
+        </div>
+        <div class="filter-dropdown" id="filterPrice">
+          <button class="filter-btn" onclick="toggleDropdown('priceDropdown')">
+            Price
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="dropdown-menu" id="priceDropdown">
+            <label class="dropdown-item"><input type="radio" name="price" value="all" checked> All Prices</label>
+            <label class="dropdown-item"><input type="radio" name="price" value="under400"> Under ₹400</label>
+            <label class="dropdown-item"><input type="radio" name="price" value="over400"> Over ₹400</label>
+          </div>
+        </div>
+      </div>
+      <div class="sort-group">
+        <span class="filter-label">Sort by:</span>
+        <div class="filter-dropdown" id="sortBy">
+          <button class="filter-btn sort-btn" onclick="toggleDropdown('sortDropdown')">
+            <span id="sortLabel">Alphabetically, A–Z</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="dropdown-menu dropdown-right" id="sortDropdown">
+            <div class="dropdown-item sort-option active" data-sort="alpha-asc">Alphabetically, A–Z</div>
+            <div class="dropdown-item sort-option" data-sort="alpha-desc">Alphabetically, Z–A</div>
+            <div class="dropdown-item sort-option" data-sort="price-asc">Price, Low to High</div>
+            <div class="dropdown-item sort-option" data-sort="price-desc">Price, High to Low</div>
+          </div>
+        </div>
+        <span class="product-count" id="seriesProductCount">3 products</span>
+      </div>
+    </div>
+
+    <!-- Series Grid -->
+    <div class="series-grid reveal-stagger" id="seriesGrid">
+
+      <!-- Product 1: Facewash -->
+      <div class="series-card" data-name="{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}" data-price="{% if facewash_product != blank %}{{ facewash_product.price | money_without_currency | replace: ',', '' }}{% else %}349{% endif %}" data-avail="available">
+        <div class="series-card-badge">Best Seller</div>
+        <div class="series-img-wrap">
+          {% if facewash_product != blank %}
+            <img src="{{ facewash_product.featured_image | image_url: width: 600 }}" alt="{{ facewash_product.title }}" class="series-product-img">
+          {% else %}
+            <img src="{{ 'Transparent_Facewash.png' | asset_img_url: '600x' }}" alt="Multi Active MS Clear" class="series-product-img">
+          {% endif %}
+        </div>
+        <div class="series-card-body">
+          <h3>{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}</h3>
+          <div class="series-card-meta">
+            <span class="series-price">{% if facewash_product != blank %}{{ facewash_product.price | money_without_trailing_zeros }}{% else %}₹349{% endif %}</span>
+            <div class="series-rating">
+              <span class="stars" aria-label="5 out of 5 stars">
+                {% for j in (1..5) %}
+                  <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                {% endfor %}
+              </span>
+              <span class="rating-count">(42)</span>
+            </div>
+          </div>
+          <p class="series-card-desc">Deep-cleansing BHA formula that removes oil, tan, and pollution buildup while protecting skin barrier.</p>
+          <button class="series-add-btn add-to-cart-btn" 
+                  data-variant-id="{% if facewash_product != blank %}{{ facewash_product.first_available_variant.id }}{% endif %}" 
+                  data-handle="facewash" 
+                  data-id="fw" 
+                  data-name="{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}" 
+                  data-price="{% if facewash_product != blank %}{{ facewash_product.price | money_without_currency | replace: ',', '' }}{% else %}349{% endif %}" 
+                  data-img="fw">Add to Routine +</button>
+        </div>
+      </div>
+
+      <!-- Product 2: Serum -->
+      <div class="series-card" data-name="{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}" data-price="{% if serum_product != blank %}{{ serum_product.price | money_without_currency | replace: ',', '' }}{% else %}599{% endif %}" data-avail="available">
+        <div class="series-card-badge featured">Most Loved</div>
+        <div class="series-img-wrap">
+          {% if serum_product != blank %}
+            <img src="{{ serum_product.featured_image | image_url: width: 600 }}" alt="{{ serum_product.title }}" class="series-product-img">
+          {% else %}
+            <img src="{{ 'Transparent_Serum.png' | asset_img_url: '600x' }}" alt="Multi Active MS Treat" class="series-product-img">
+          {% endif %}
+        </div>
+        <div class="series-card-body">
+          <h3>{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}</h3>
+          <div class="series-card-meta">
+            <span class="series-price">{% if serum_product != blank %}{{ serum_product.price | money_without_trailing_zeros }}{% else %}₹599{% endif %}</span>
+            <div class="series-rating">
+              <span class="stars" aria-label="5 out of 5 stars">
+                {% for j in (1..5) %}
+                  <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                {% endfor %}
+              </span>
+              <span class="rating-count">(67)</span>
+            </div>
+          </div>
+          <p class="series-card-desc">Potent actives that target acne scars, regulate sebum and rapidly restore your skin's moisture barrier.</p>
+          <button class="series-add-btn add-to-cart-btn" 
+                  data-variant-id="{% if serum_product != blank %}{{ serum_product.first_available_variant.id }}{% endif %}" 
+                  data-handle="serum" 
+                  data-id="sr" 
+                  data-name="{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}" 
+                  data-price="{% if serum_product != blank %}{{ serum_product.price | money_without_currency | replace: ',', '' }}{% else %}599{% endif %}" 
+                  data-img="sr">Add to Routine +</button>
+        </div>
+      </div>
+
+      <!-- Product 3: Sunscreen -->
+      <div class="series-card" data-name="{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}" data-price="{% if sunscreen_product != blank %}{{ sunscreen_product.price | money_without_currency | replace: ',', '' }}{% else %}549{% endif %}" data-avail="available">
+        <div class="series-img-wrap">
+          {% if sunscreen_product != blank %}
+            <img src="{{ sunscreen_product.featured_image | image_url: width: 600 }}" alt="{{ sunscreen_product.title }}" class="series-product-img">
+          {% else %}
+            <img src="{{ 'Transparent_Sunscreen.png' | asset_img_url: '600x' }}" alt="Multi Active MS Protect" class="series-product-img">
+          {% endif %}
+        </div>
+        <div class="series-card-body">
+          <h3>{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}</h3>
+          <div class="series-card-meta">
+            <span class="series-price">{% if sunscreen_product != blank %}{{ sunscreen_product.price | money_without_trailing_zeros }}{% else %}₹549{% endif %}</span>
+            <div class="series-rating">
+              <span class="stars" aria-label="4 out of 5 stars">
+                {% for j in (1..4) %}
+                  <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                {% endfor %}
+                <svg class="star-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </span>
+              <span class="rating-count">(38)</span>
+            </div>
+          </div>
+          <p class="series-card-desc">Broad-spectrum UVA/UVB matte sunscreen engineered for Indian heat, humidity and active lifestyles.</p>
+          <button class="series-add-btn add-to-cart-btn" 
+                  data-variant-id="{% if sunscreen_product != blank %}{{ sunscreen_product.first_available_variant.id }}{% endif %}" 
+                  data-handle="sunscreen" 
+                  data-id="ss" 
+                  data-name="{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}" 
+                  data-price="{% if sunscreen_product != blank %}{{ sunscreen_product.price | money_without_currency | replace: ',', '' }}{% else %}549{% endif %}" 
+                  data-img="ss">Add to Routine +</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Droppable Dropdown Toggler helper script -->
+<script>
+  function toggleDropdown(id) {
+    const el = document.getElementById(id);
+    const isOpen = el.classList.contains('show');
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+    if (!isOpen) {
+      el.classList.add('show');
+    }
+  }
+
+  // Close menus on click outside
+  window.addEventListener('click', (e) => {
+    if (!e.target.closest('.filter-dropdown')) {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+    }
+  });
+
+  // Client-side Personalization Badge Logic
+  document.addEventListener('DOMContentLoaded', () => {
+    const profileStr = localStorage.getItem('skinProfile');
+    if (profileStr) {
+      const profile = JSON.parse(profileStr);
+      const cards = document.querySelectorAll('.series-card');
+      
+      cards.forEach(card => {
+        const name = card.dataset.name;
+        let recommend = false;
+        let reason = '';
+
+        if (profile.type === 'Oily' || profile.type === 'Combination' || profile.concern === 'Acne') {
+          if (name.includes('Wash') || name.includes('Clear') || name.includes('Serum') || name.includes('Treat')) {
+            recommend = true;
+            reason = `Perfect for ${profile.type} Skin`;
+          }
+        } else if (profile.type === 'Dry' || profile.type === 'Sensitive') {
+          if (name.includes('Sunscreen') || name.includes('Protect')) {
+            recommend = true;
+            reason = `Hydrating for ${profile.type} Skin`;
+          }
+        } else {
+          if (name.includes('Wash') || name.includes('Clear')) {
+            recommend = true;
+            reason = "Daily Essential";
+          }
+        }
+
+        if (recommend) {
+          const existingBadge = card.querySelector('.series-card-badge');
+          if (existingBadge) existingBadge.remove();
+          
+          const badge = document.createElement('div');
+          badge.className = 'series-card-badge';
+          badge.style.background = 'var(--gold)';
+          badge.style.color = 'var(--charcoal)';
+          badge.textContent = `✨ Recommended: ${reason}`;
+          card.insertBefore(badge, card.firstChild);
+        }
+      });
+    }
+  });
+</script>

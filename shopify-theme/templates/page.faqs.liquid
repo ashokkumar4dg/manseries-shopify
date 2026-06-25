@@ -1,0 +1,123 @@
+<section class="policy-page-hero">
+  <div class="container">
+    <span class="policy-meta">Customer Support</span>
+    <h1>{{ page.title | default: "Frequently Asked Questions" }}</h1>
+    <div class="policy-hero-rule"></div>
+  </div>
+</section>
+
+<section class="policy-content-wrapper">
+  <div class="container policy-container">
+    <div class="policy-body">
+      
+      <!-- Category 1: Brand -->
+      <div class="faq-category-section">
+        <h2 class="faq-category-title">Brand</h2>
+        
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span class="faq-question">What is Man Series?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <div class="faq-answer">
+                <p>Man Series is a clinical, science-backed skincare brand designed and formulated specifically for Indian men. We focus on transparent active percentages, skin minimalism (fewer products, healthier skin), and honest pricing. You can read more about our philosophy and story in the <a href="/pages/about">About</a> section.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 2: Shipping -->
+      <div class="faq-category-section">
+        <h2 class="faq-category-title">Shipping Details</h2>
+        
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span class="faq-question">Where do you ship to?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <div class="faq-answer">
+                <p>We ship all across India, delivering to over 20,000 pincodes. Orders can be paid via prepaid digital methods or Cash on Delivery (COD) for your convenience. All domestic orders are dispatched from our centralized fulfillment center in Jaipur, Rajasthan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 3: Delivery -->
+      <div class="faq-category-section">
+        <h2 class="faq-category-title">Delivery Details</h2>
+        
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span class="faq-question">How long will my order take?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <div class="faq-answer">
+                <p>We usually ship within 24 working hours after receiving your order. Once shipped, our logistics partner typically takes between 2 to 5 business days to deliver the package. Orders in metropolitan areas and Tier-1 cities can expect a faster delivery speed (often within 3 days).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 4: Returns -->
+      <div class="faq-category-section">
+        <h2 class="faq-category-title">Returns Details</h2>
+        
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span class="faq-question">What is your return policy?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <div class="faq-answer">
+                <p>You can raise a return request by sending us an email at <a href="mailto:support@manseries.in">support@manseries.in</a>, and our support team will assist you. Return shipments are managed entirely by us. For full details on criteria and eligibility, please check our dedicated <a href="/pages/returns">Returns &amp; Refund Policy</a> page.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Accordion Interactive Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.faq-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const item = trigger.parentNode;
+        const content = item.querySelector('.faq-content');
+        const isActive = item.classList.contains('active');
+        
+        // Close other active items globally to make it a clean accordion
+        document.querySelectorAll('.faq-item').forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('active');
+            otherItem.querySelector('.faq-content').style.maxHeight = null;
+            otherItem.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        if (isActive) {
+          item.classList.remove('active');
+          content.style.maxHeight = null;
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          item.classList.add('active');
+          content.style.maxHeight = content.scrollHeight + 'px';
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  });
+</script>

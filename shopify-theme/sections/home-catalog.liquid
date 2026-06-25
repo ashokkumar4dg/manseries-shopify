@@ -1,0 +1,181 @@
+{% assign facewash_product = all_products['facewash'] %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['multi-active-ms-clear'] %}{% endif %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['ms-clear-facewash'] %}{% endif %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['ms-clear'] %}{% endif %}
+
+{% assign serum_product = all_products['serum'] %}
+{% if serum_product == blank %}{% assign serum_product = all_products['multi-active-ms-treat'] %}{% endif %}
+{% if serum_product == blank %}{% assign serum_product = all_products['ms-treat-serum'] %}{% endif %}
+{% if serum_product == blank %}{% assign serum_product = all_products['ms-treat'] %}{% endif %}
+
+{% assign sunscreen_product = all_products['sunscreen'] %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['multi-active-ms-protect'] %}{% endif %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['ms-protect-sunscreen'] %}{% endif %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['ms-protect'] %}{% endif %}
+
+{% if facewash_product == blank or serum_product == blank or sunscreen_product == blank %}
+  {% for product in collections.all.products %}
+    {% assign handle_down = product.handle | downcase %}
+    {% assign title_down = product.title | downcase %}
+    {% if handle_down contains 'facewash' or handle_down contains 'clear' or title_down contains 'facewash' or title_down contains 'face wash' or title_down contains 'clear' %}
+      {% if facewash_product == blank %}{% assign facewash_product = product %}{% endif %}
+    {% elsif handle_down contains 'serum' or handle_down contains 'treat' or title_down contains 'serum' or title_down contains 'treat' %}
+      {% if serum_product == blank %}{% assign serum_product = product %}{% endif %}
+    {% elsif handle_down contains 'sunscreen' or handle_down contains 'protect' or title_down contains 'sunscreen' or title_down contains 'protect' %}
+      {% if sunscreen_product == blank %}{% assign sunscreen_product = product %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<section class="catalog" id="catalog">
+  <div class="bg-watermark">THE ESSENTIALS</div>
+  <div class="container">
+    <div class="products-header reveal">
+      <span class="eyebrow">MULTI ACTIVE SERIES</span>
+      <h2>Three Products. One Complete Series.</h2>
+      <p>Each formula is engineered specifically for Indian men's skin — targeting oil, pigmentation, and UV exposure.</p>
+    </div>
+
+    <div class="products-grid reveal-stagger">
+
+      <!-- Product 1: Face Wash -->
+      <div class="product-card" data-id="fw">
+        <div>
+          <div class="product-img-box">
+            {% if facewash_product != blank %}
+              <img src="{{ facewash_product.featured_image | image_url: width: 600 }}" alt="{{ facewash_product.title }}" class="product-real-img">
+            {% else %}
+              <img src="{{ 'Transparent_Facewash.png' | asset_img_url: '600x' }}" alt="Multi Active MS Clear" class="product-real-img">
+            {% endif %}
+          </div>
+          <div class="product-info">
+            <span class="product-actives-pill">Salicylic Acid + Chamomile</span>
+            <h3>{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}</h3>
+            <ul class="product-bullets">
+              <li>Cleanses excessive oil &amp; tan buildup</li>
+              <li>Anti-pollution barrier protection</li>
+              <li>Removes hyperpigmentation</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-footer">
+          <div class="price-container">
+            <span class="price-label">M.R.P.</span>
+            <span class="price-mrp">
+              {% if facewash_product != blank %}
+                {{ facewash_product.price | money_without_trailing_zeros }}
+              {% else %}
+                ₹349
+              {% endif %}
+            </span>
+          </div>
+          <button class="add-to-cart-btn" 
+                  data-variant-id="{% if facewash_product != blank %}{{ facewash_product.first_available_variant.id }}{% endif %}" 
+                  data-handle="facewash" 
+                  data-id="fw" 
+                  data-name="{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}" 
+                  data-price="{% if facewash_product != blank %}{{ facewash_product.price | money_without_currency | replace: ',', '' }}{% else %}349{% endif %}" 
+                  data-img="fw" 
+                  aria-label="Add to cart">+</button>
+        </div>
+      </div>
+
+      <!-- Product 2: Face Serum -->
+      <div class="product-card" data-id="sr">
+        <div>
+          <div class="product-img-box">
+            {% if serum_product != blank %}
+              <img src="{{ serum_product.featured_image | image_url: width: 600 }}" alt="{{ serum_product.title }}" class="product-real-img">
+            {% else %}
+              <img src="{{ 'Transparent_Serum.png' | asset_img_url: '600x' }}" alt="Multi Active MS Treat" class="product-real-img">
+            {% endif %}
+          </div>
+          <div class="product-info">
+            <span class="product-actives-pill">Niacinamide 2% + Zinc PCA</span>
+            <h3>{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}</h3>
+            <ul class="product-bullets">
+              <li>Soothes active acne &amp; dark spots</li>
+              <li>Regulates sebum oil balance</li>
+              <li>Fortifies lipid barrier repair</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-footer">
+          <div class="price-container">
+            <span class="price-label">M.R.P.</span>
+            <span class="price-mrp">
+              {% if serum_product != blank %}
+                {{ serum_product.price | money_without_trailing_zeros }}
+              {% else %}
+                ₹599
+              {% endif %}
+            </span>
+          </div>
+          <button class="add-to-cart-btn" 
+                  data-variant-id="{% if serum_product != blank %}{{ serum_product.first_available_variant.id }}{% endif %}" 
+                  data-handle="serum" 
+                  data-id="sr" 
+                  data-name="{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}" 
+                  data-price="{% if serum_product != blank %}{{ serum_product.price | money_without_currency | replace: ',', '' }}{% else %}599{% endif %}" 
+                  data-img="sr" 
+                  aria-label="Add to cart">+</button>
+        </div>
+      </div>
+
+      <!-- Product 3: Sunscreen -->
+      <div class="product-card" data-id="ss">
+        <div>
+          <div class="product-img-box">
+            {% if sunscreen_product != blank %}
+              <img src="{{ sunscreen_product.featured_image | image_url: width: 600 }}" alt="{{ sunscreen_product.title }}" class="product-real-img">
+            {% else %}
+              <img src="{{ 'Transparent_Sunscreen.png' | asset_img_url: '600x' }}" alt="Multi Active MS Protect" class="product-real-img">
+            {% endif %}
+          </div>
+          <div class="product-info">
+            <span class="product-actives-pill">SPF 50+ · PA++++ · Matte</span>
+            <h3>{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}</h3>
+            <ul class="product-bullets">
+              <li>Broad spectrum UVA/UVB defense</li>
+              <li>High sweat &amp; water resistance</li>
+              <li>Zero white-cast matte formula</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-footer">
+          <div class="price-container">
+            <span class="price-label">M.R.P.</span>
+            <span class="price-mrp">
+              {% if sunscreen_product != blank %}
+                {{ sunscreen_product.price | money_without_trailing_zeros }}
+              {% else %}
+                ₹549
+              {% endif %}
+            </span>
+          </div>
+          <button class="add-to-cart-btn" 
+                  data-variant-id="{% if sunscreen_product != blank %}{{ sunscreen_product.first_available_variant.id }}{% endif %}" 
+                  data-handle="sunscreen" 
+                  data-id="ss" 
+                  data-name="{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}" 
+                  data-price="{% if sunscreen_product != blank %}{{ sunscreen_product.price | money_without_currency | replace: ',', '' }}{% else %}549{% endif %}" 
+                  data-img="ss" 
+                  aria-label="Add to cart">+</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home Catalog",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Home Catalog"
+    }
+  ]
+}
+{% endschema %}

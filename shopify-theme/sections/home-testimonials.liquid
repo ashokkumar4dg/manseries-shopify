@@ -1,0 +1,162 @@
+<section class="testimonials">
+  <div class="container" style="text-align: center; margin-bottom: 3.5rem;">
+    <span class="eyebrow" style="color: var(--sage-dark); font-weight: 700; letter-spacing: 2px;">REAL RESULTS</span>
+    <h2 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--charcoal); margin-top: 1rem;">Trusted by Indian Men</h2>
+  </div>
+  
+  <!-- Row 1: Sliding Left (Right to Left) -->
+  <div class="testimonial-marquee">
+    <div class="testimonial-track track-left">
+      {% for i in (1..6) %}
+        {% assign avatar_name = 'avatar_' | append: i | append: '.png' %}
+        <div class="testimonial-card">
+          <div class="testimonial-card-header">
+            <img src="{{ avatar_name | asset_img_url: '120x' }}" alt="Reviewer {{ i }}" class="reviewer-avatar">
+            <div class="reviewer-meta">
+              <span class="reviewer-name">
+                {% if i == 1 %}Rahul M.
+                {% elsif i == 2 %}Arun Kumar
+                {% elsif i == 3 %}Devendra S.
+                {% elsif i == 4 %}Rohan Mehta
+                {% elsif i == 5 %}Karthik R.
+                {% else %}Sameer Sen{% endif %}
+              </span>
+              <span class="reviewer-order-id">Verified Purchase • #MS-90{{ i | plus: 10 }}</span>
+            </div>
+            <div class="stars" aria-label="5 out of 5 stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <div class="testimonial-card-body">
+            <p>
+              {% if i == 1 %}"Finally a sunscreen that doesn't make me look like a ghost or sweat off immediately in the Mumbai heat. 10/10."
+              {% elsif i == 2 %}"I was skeptical about a 3-step routine, but my skin has never looked clearer or less oily during the day."
+              {% elsif i == 3 %}"The face wash cleanses deeply without leaving my face feeling dry. The serum is a literal game changer for acne."
+              {% elsif i == 4 %}"Extremely lightweight formulas! The sunscreen feels like water and leaves zero white cast on my dark skin."
+              {% elsif i == 5 %}"Outstanding packaging and even better performance. My persistent tan has reduced visibly within two weeks."
+              {% else %}"B.Y.O.S is brilliant! Customized active ingredients that actually work for Indian humidity. Highly recommend."{% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+      
+      <!-- Duplicate Row 1 for Infinite Loop -->
+      {% for i in (1..6) %}
+        {% assign avatar_name = 'avatar_' | append: i | append: '.png' %}
+        <div class="testimonial-card">
+          <div class="testimonial-card-header">
+            <img src="{{ avatar_name | asset_img_url: '120x' }}" alt="Reviewer {{ i }}" class="reviewer-avatar">
+            <div class="reviewer-meta">
+              <span class="reviewer-name">
+                {% if i == 1 %}Rahul M.
+                {% elsif i == 2 %}Arun Kumar
+                {% elsif i == 3 %}Devendra S.
+                {% elsif i == 4 %}Rohan Mehta
+                {% elsif i == 5 %}Karthik R.
+                {% else %}Sameer Sen{% endif %}
+              </span>
+              <span class="reviewer-order-id">Verified Purchase • #MS-90{{ i | plus: 10 }}</span>
+            </div>
+            <div class="stars" aria-label="5 out of 5 stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <div class="testimonial-card-body">
+            <p>
+              {% if i == 1 %}"Finally a sunscreen that doesn't make me look like a ghost or sweat off immediately in the Mumbai heat. 10/10."
+              {% elsif i == 2 %}"I was skeptical about a 3-step routine, but my skin has never looked clearer or less oily during the day."
+              {% elsif i == 3 %}"The face wash cleanses deeply without leaving my face feeling dry. The serum is a literal game changer for acne."
+              {% elsif i == 4 %}"Extremely lightweight formulas! The sunscreen feels like water and leaves zero white cast on my dark skin."
+              {% elsif i == 5 %}"Outstanding packaging and even better performance. My persistent tan has reduced visibly within two weeks."
+              {% else %}"B.Y.O.S is brilliant! Customized active ingredients that actually work for Indian humidity. Highly recommend."{% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Row 2: Sliding Right (Left to Right) -->
+  <div class="testimonial-marquee">
+    <div class="testimonial-track track-right">
+      {% for i in (7..12) %}
+        {% assign avatar_name = 'avatar_' | append: i | append: '.png' %}
+        <div class="testimonial-card">
+          <div class="testimonial-card-header">
+            <img src="{{ avatar_name | asset_img_url: '120x' }}" alt="Reviewer {{ i }}" class="reviewer-avatar">
+            <div class="reviewer-meta">
+              <span class="reviewer-name">
+                {% if i == 7 %}Vikram S.
+                {% elsif i == 8 %}Arjun P.
+                {% elsif i == 9 %}Kabir Malhotra
+                {% elsif i == 10 %}Aditya Sharma
+                {% elsif i == 11 %}Manish J.
+                {% else %}Preet Singh{% endif %}
+              </span>
+              <span class="reviewer-order-id">Verified Purchase • #MS-92{{ i | plus: 10 }}</span>
+            </div>
+            <div class="stars" aria-label="5 out of 5 stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <div class="testimonial-card-body">
+            <p>
+              {% if i == 7 %}"The face wash actually cleared my stubborn tan within a week. My skin feels fresh, not tight and dry."
+              {% elsif i == 8 %}"Minimalist, no-nonsense. The serum absorbs instantly. I've thrown out my 5-step routine for just these 3."
+              {% elsif i == 9 %}"Finally, products that are formulated specifically for our skin type. Not heavy, not sticky. Perfect matte finish."
+              {% elsif i == 10 %}"A premium routine at an honest price. My girlfriend noticed the glow within a few days of using the serum."
+              {% elsif i == 11 %}"Simple, clean, and highly effective. The sunscreen does not sting my eyes even during intensive workouts."
+              {% else %}"The fragrance is subtle and masculine, and the formulations are premium. I bought the complete bundle."{% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- Duplicate Row 2 for Infinite Loop -->
+      {% for i in (7..12) %}
+        {% assign avatar_name = 'avatar_' | append: i | append: '.png' %}
+        <div class="testimonial-card">
+          <div class="testimonial-card-header">
+            <img src="{{ avatar_name | asset_img_url: '120x' }}" alt="Reviewer {{ i }}" class="reviewer-avatar">
+            <div class="reviewer-meta">
+              <span class="reviewer-name">
+                {% if i == 7 %}Vikram S.
+                {% elsif i == 8 %}Arjun P.
+                {% elsif i == 9 %}Kabir Malhotra
+                {% elsif i == 10 %}Aditya Sharma
+                {% elsif i == 11 %}Manish J.
+                {% else %}Preet Singh{% endif %}
+              </span>
+              <span class="reviewer-order-id">Verified Purchase • #MS-92{{ i | plus: 10 }}</span>
+            </div>
+            <div class="stars" aria-label="5 out of 5 stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <div class="testimonial-card-body">
+            <p>
+              {% if i == 7 %}"The face wash actually cleared my stubborn tan within a week. My skin feels fresh, not tight and dry."
+              {% elsif i == 8 %}"Minimalist, no-nonsense. The serum absorbs instantly. I've thrown out my 5-step routine for just these 3."
+              {% elsif i == 9 %}"Finally, products that are formulated specifically for our skin type. Not heavy, not sticky. Perfect matte finish."
+              {% elsif i == 10 %}"A premium routine at an honest price. My girlfriend noticed the glow within a few days of using the serum."
+              {% elsif i == 11 %}"Simple, clean, and highly effective. The sunscreen does not sting my eyes even during intensive workouts."
+              {% else %}"The fragrance is subtle and masculine, and the formulations are premium. I bought the complete bundle."{% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home Testimonials",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Home Testimonials"
+    }
+  ]
+}
+{% endschema %}

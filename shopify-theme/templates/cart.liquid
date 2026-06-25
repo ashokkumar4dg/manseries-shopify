@@ -1,0 +1,195 @@
+<style>
+  .cart-page-wrapper {
+    padding: 10rem 0 6rem;
+    min-height: 85vh;
+    background: var(--cream);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .cart-page-card {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(28px) saturate(1.3);
+    -webkit-backdrop-filter: blur(28px) saturate(1.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 28px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @media (max-width: 600px) {
+    .cart-page-wrapper {
+      padding: 6rem 0 3rem;
+    }
+    .cart-page-card {
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+    }
+  }
+</style>
+
+<main class="cart-page-wrapper">
+  <div class="container" style="max-width: 600px; padding: 2rem 1.5rem;">
+    <div class="cart-page-card">
+      
+      <!-- Header -->
+      <div class="cart-drawer-header">
+        <h3>Your Routine</h3>
+        <a href="/pages/series" class="close-cart-btn" style="text-decoration: none;">&times;</a>
+      </div>
+
+      <!-- Shipping Progress -->
+      {% assign free_shipping_threshold = 49900 %}
+      {% assign cart_total = cart.total_price %}
+      <div class="shipping-progress">
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
+          <span id="shippingMessage">
+            {% if cart_total >= free_shipping_threshold %}
+              🎉 You've unlocked <span class="highlight">free shipping!</span>
+            {% else %}
+              {% assign remaining = free_shipping_threshold | minus: cart_total %}
+              Add {{ remaining | money_without_trailing_zeros }} more for <span class="highlight">free shipping</span>
+            {% endif %}
+          </span>
+          <span id="shippingPercent" style="font-weight:600;">
+            {% if cart_total >= free_shipping_threshold %}
+              100%
+            {% else %}
+              {{ cart_total | times: 100 | divided_by: free_shipping_threshold }}%
+            {% endif %}
+          </span>
+        </div>
+        <div class="shipping-bar-bg">
+          <div class="shipping-fill" id="shippingFill" style="width: {% if cart_total >= free_shipping_threshold %}100{% else %}{{ cart_total | times: 100 | divided_by: free_shipping_threshold }}{% endif %}%"></div>
+        </div>
+      </div>
+
+      <!-- Items Container -->
+      <div class="cart-items-container" id="cartItemsContainer" style="max-height: 480px; overflow-y: auto;">
+        {% if cart.item_count == 0 %}
+          <div class="cart-empty-message">Your routine is empty.<br>Add a product to begin your journey.</div>
+        {% else %}
+          <form action="{{ routes.cart_url }}" method="post" id="cart-form">
+            {% for item in cart.items %}
+              <div class="cart-item" style="animation-delay: {{ forloop.index0 | times: 80 }}ms">
+                <!-- Remove Button -->
+                <button type="button" class="remove-cart-item-btn" data-variant-id="{{ item.variant_id }}" aria-label="Remove item">&times;</button>
+                
+                <!-- Item Image -->
+                <div class="cart-item-img">
+                  <img src="{{ item.image | image_url: width: 240 }}" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.5); filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));" alt="{{ item.title }}">
+                </div>
+                
+                <!-- Item Details -->
+                <div class="cart-item-details">
+                  <h4>{{ item.product.title }}</h4>
+                  <p>{{ item.price | money }} · Active Formula</p>
+                  
+                  <div class="cart-item-quantity">
+                    <button type="button" class="qty-btn dec-btn" data-variant-id="{{ item.variant_id }}" data-qty="{{ item.quantity | minus: 1 }}">−</button>
+                    <span class="item-qty">{{ item.quantity }}</span>
+                    <button type="button" class="qty-btn inc-btn" data-variant-id="{{ item.variant_id }}" data-qty="{{ item.quantity | plus: 1 }}">+</button>
+                  </div>
+                </div>
+                
+                <!-- Item Price -->
+                <div class="cart-item-price">{{ item.final_line_price | money }}</div>
+              </div>
+            {% endfor %}
+          </form>
+        {% endif %}
+      </div>
+
+      <!-- Footer -->
+      {% if cart.item_count > 0 %}
+        <div class="cart-drawer-footer">
+          <!-- coupon box replaced by automatic discounts -->
+          
+          <!-- Detailed Price Breakdown -->
+          <div class="cart-summary-details" id="cartSummaryDetails" style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.2rem; border-top: 1px solid var(--border-warm); padding-top: 1.2rem; margin-bottom: 0.8rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); font-family: var(--font-heading);">
+              <span>Subtotal</span>
+              <span id="cartSubtotalValue">{{ cart.original_total_price | money }}</span>
+            </div>
+            
+            {% if cart.cart_level_discount_applications.size > 0 %}
+              {% for discount in cart.cart_level_discount_applications %}
+                <div id="cartDiscountRow" style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #74b891; font-weight: 600; font-family: var(--font-heading);">
+                  <span id="cartDiscountLabel">{{ discount.title }}</span>
+                  <span id="cartDiscountValue">−{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          
+          <!-- Final Total Row -->
+          <div class="cart-total-row" style="border-top: 1px solid var(--border-warm); padding-top: 0.8rem;">
+            <span>Total Pay</span>
+            <span id="cartTotalValue">{{ cart.total_price | money }}</span>
+          </div>
+          
+          <!-- Checkout Button -->
+          <button class="checkout-btn" onclick="window.location.href='/checkout'">Proceed to Checkout</button>
+          
+          <!-- Continue Button -->
+          <button class="continue-btn" onclick="window.location.href='/pages/series'">Continue Shopping</button>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Quantity change listeners
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const variantId = btn.dataset.variantId;
+        const newQty = btn.dataset.qty;
+        updateShopifyCartQty(variantId, newQty);
+      });
+    });
+
+    // Remove buttons listeners
+    document.querySelectorAll('.remove-cart-item-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const variantId = btn.dataset.variantId;
+        updateShopifyCartQty(variantId, 0);
+      });
+    });
+  });
+
+  function updateShopifyCartQty(variantId, qty) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: variantId,
+        quantity: parseInt(qty)
+      })
+    })
+    .then(res => res.json())
+    .then(cart => {
+      // Reload page to reflect updated quantities and subtotal natively
+      window.location.reload();
+    })
+    .catch(err => {
+      console.error('Error changing cart quantities:', err);
+      alert('Could not update cart. Please try again.');
+    });
+  }
+</script>

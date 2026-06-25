@@ -1,0 +1,62 @@
+<section class="reactor" id="reactor">
+  <div class="bg-watermark">MOLECULAR LAB</div>
+  <div class="container">
+    <div class="reactor-header reveal">
+      <h2>Our Formulation Matrix</h2>
+      <p>Explore the multi-functional synergy behind our products. Select a formulation to see how our hero actives bind together to deliver maximum results in a single step.</p>
+    </div>
+
+    <div class="reactor-wrapper reveal">
+      <div class="reactor-controls">
+        <h3>Your Concern Our Formulation</h3>
+        <p>See how our multi-tasking ingredients align to eliminate clutter from your routine.</p>
+
+        <div class="concern-selector">
+          <button class="concern-btn" data-acid="fw" data-concern="MS Clear Facewash">
+            <span>MS Clear Facewash</span>
+            <span class="concern-indicator"></span>
+          </button>
+          <button class="concern-btn" data-acid="sr" data-concern="MS Treat Serum">
+            <span>MS Treat Serum</span>
+            <span class="concern-indicator"></span>
+          </button>
+          <button class="concern-btn" data-acid="ss" data-concern="MS Protect Sunscreen">
+            <span>MS Protect Sunscreen</span>
+            <span class="concern-indicator"></span>
+          </button>
+        </div>
+
+        <div class="reactor-result" id="reactorResult">
+          <div class="result-icon" id="resultIcon">✓</div>
+          <div class="result-text">
+            <h4 id="resultTitle">Formula Activated</h4>
+            <p id="resultDesc">Active ingredients syncing...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reactor-display">
+        <canvas class="reactor-canvas" id="reactorCanvas"></canvas>
+        <div class="reactor-instructions" id="canvasInstructions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <h4>Reactor Idle</h4>
+          <p>Select a concern to trigger the reactor.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home Reactor",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Home Reactor"
+    }
+  ]
+}
+{% endschema %}

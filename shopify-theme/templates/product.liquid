@@ -1,0 +1,629 @@
+{% assign is_facewash = false %}
+{% assign is_serum = false %}
+{% assign is_sunscreen = false %}
+
+{% if product.handle == 'facewash' or product.title contains 'Clear' or product.title contains 'Wash' %}
+  {% assign is_facewash = true %}
+{% elsif product.handle == 'serum' or product.title contains 'Treat' or product.title contains 'Serum' %}
+  {% assign is_serum = true %}
+{% else %}
+  {% assign is_sunscreen = true %}
+{% endif %}
+
+{% assign facewash_product = all_products['facewash'] %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['multi-active-ms-clear'] %}{% endif %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['ms-clear-facewash'] %}{% endif %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['ms-clear'] %}{% endif %}
+
+{% assign serum_product = all_products['serum'] %}
+{% if serum_product == blank %}{% assign serum_product = all_products['multi-active-ms-treat'] %}{% endif %}
+{% if serum_product == blank %}{% assign serum_product = all_products['ms-treat-serum'] %}{% endif %}
+{% if serum_product == blank %}{% assign serum_product = all_products['ms-treat'] %}{% endif %}
+
+{% assign sunscreen_product = all_products['sunscreen'] %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['multi-active-ms-protect'] %}{% endif %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['ms-protect-sunscreen'] %}{% endif %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['ms-protect'] %}{% endif %}
+
+{% if facewash_product == blank or serum_product == blank or sunscreen_product == blank %}
+  {% for prod in collections.all.products %}
+    {% assign handle_down = prod.handle | downcase %}
+    {% assign title_down = prod.title | downcase %}
+    {% if handle_down contains 'facewash' or handle_down contains 'clear' or title_down contains 'facewash' or title_down contains 'face wash' or title_down contains 'clear' %}
+      {% if facewash_product == blank %}{% assign facewash_product = prod %}{% endif %}
+    {% elsif handle_down contains 'serum' or handle_down contains 'treat' or title_down contains 'serum' or title_down contains 'treat' %}
+      {% if serum_product == blank %}{% assign serum_product = prod %}{% endif %}
+    {% elsif handle_down contains 'sunscreen' or handle_down contains 'protect' or title_down contains 'sunscreen' or title_down contains 'protect' %}
+      {% if sunscreen_product == blank %}{% assign sunscreen_product = prod %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<style>
+  .product-detail-wrapper {
+    padding: 12rem 0 6rem;
+    background: var(--cream);
+    min-height: 90vh;
+  }
+  .product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  
+  /* Active Badges styling */
+  .actives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .active-card {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-warm);
+    border-radius: 16px;
+    padding: 1.2rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-smooth);
+  }
+  .active-card:hover {
+    transform: translateY(-3px);
+    background: #fff;
+    border-color: var(--sage);
+    box-shadow: var(--shadow-subtle);
+  }
+  .active-card h4 {
+    font-size: 1.1rem;
+    color: var(--sage-dark);
+    margin-bottom: 0.2rem;
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+  .active-card p {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Clinical stats widget */
+  .clinical-box {
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid var(--border-warm);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(10px);
+  }
+  .clinical-box h3 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    margin-bottom: 1.2rem;
+  }
+  .clinical-item {
+    margin-bottom: 1.2rem;
+  }
+  .clinical-item:last-child {
+    margin-bottom: 0;
+  }
+  .clinical-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-family: var(--font-heading);
+  }
+  .clinical-bar-bg {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .clinical-bar-fill {
+    height: 100%;
+    background: var(--sage-dark);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Routine Timeline Guide */
+  .routine-timeline {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border-warm);
+    padding-top: 2rem;
+  }
+  .routine-timeline h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .timeline-step {
+    display: flex;
+    gap: 1.2rem;
+    position: relative;
+  }
+  .timeline-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    border: 2px solid var(--sage-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--sage-dark);
+    flex-shrink: 0;
+  }
+  .timeline-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 0.2rem;
+  }
+  .timeline-info p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Upsell styling */
+  .upsell-section {
+    margin-top: 5rem;
+    border-top: 1px solid var(--border-warm);
+    padding-top: 4rem;
+  }
+  .upsell-section h3 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .upsell-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  .upsell-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--border-warm);
+    border-radius: 24px;
+    padding: 1.8rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    transition: var(--transition-smooth);
+  }
+  .upsell-card:hover {
+    transform: translateY(-5px);
+    background: #fff;
+    border-color: var(--sage);
+    box-shadow: var(--shadow-subtle);
+  }
+  .upsell-img-box {
+    width: 80px;
+    height: 80px;
+    background: var(--cream);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .upsell-img-box img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+  .upsell-info {
+    flex: 1;
+  }
+  .upsell-info h4 {
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  .upsell-info p {
+    font-size: 0.88rem;
+    color: var(--sage-dark);
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  /* Quantity Picker styling */
+  .qty-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-family: var(--font-heading);
+  }
+  .qty-selector {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-warm);
+    border-radius: 100px;
+    overflow: hidden;
+    padding: 0.25rem 0.6rem;
+  }
+  .qty-selector button {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--charcoal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .qty-selector button:hover {
+    background: rgba(0,0,0,0.04);
+  }
+  .qty-value {
+    width: 30px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  
+  @media (max-width: 768px) {
+    .product-detail-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .upsell-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="product-detail-wrapper">
+  <div class="container" style="max-width: 1100px;">
+    
+    <!-- Main product details -->
+    <div class="product-detail-grid">
+      
+      <!-- Left: Product Image Showcase -->
+      <div class="product-detail-image-box" style="background: rgba(255, 255, 255, 0.4); border-radius: 32px; padding: 4rem 3rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-warm); position: sticky; top: 110px;">
+        <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" style="max-width: 100%; max-height: 440px; object-fit: contain; filter: drop-shadow(0 15px 35px rgba(0,0,0,0.06)); transform: scale(1.15);">
+      </div>
+      
+      <!-- Right: Detailed Product Copy -->
+      <div class="product-detail-info" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <span class="eyebrow" style="color: var(--sage-dark); font-weight: 700; letter-spacing: 2px;">{{ product.type | default: 'Skin Minimalism' | uppercase }}</span>
+        <h1 style="font-family: var(--font-display); font-size: 3.5rem; letter-spacing: -2px; margin: 0; line-height: 1.05; color: var(--charcoal);">{{ product.title }}</h1>
+        
+        <!-- Star ratings -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+          <span class="stars" style="color: #c9a47b; display: flex;" aria-label="5 out of 5 stars">
+            {% for k in (1..5) %}
+              <svg class="star-icon" width="16" height="16" viewBox="0 0 24 24" style="fill: #c9a47b; margin-right: 2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            {% endfor %}
+          </span>
+          <span style="color: var(--muted); font-family: var(--font-heading); font-weight: 600;">
+            {% if is_facewash %}(42 reviews)
+            {% elsif is_serum %}(67 reviews)
+            {% else %}(38 reviews){% endif %}
+          </span>
+        </div>
+        
+        <!-- Price Display -->
+        <div style="font-size: 2.2rem; font-family: var(--font-heading); color: var(--charcoal); font-weight: 800; letter-spacing: -0.5px;">
+          {{ product.price | money }}
+        </div>
+        
+        <!-- Main Description -->
+        <div class="rte" style="line-height: 1.8; color: var(--charcoal); font-size: 1.05rem; border-top: 1px solid var(--border-warm); padding-top: 1.5rem;">
+          {{ product.description }}
+        </div>
+
+        <!-- 1. Formulation & Clinical Actives breakdown -->
+        <div>
+          <h3 style="font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; color:var(--charcoal); font-family:var(--font-heading); font-weight:700; margin-top: 1.5rem; margin-bottom: 0.8rem;">Clinical Formulation</h3>
+          <div class="actives-grid">
+            {% if is_facewash %}
+              <div class="active-card">
+                <h4>Salicylic Acid 2%</h4>
+                <p>Cleanses pores</p>
+              </div>
+              <div class="active-card">
+                <h4>Glycolic Acid 1%</h4>
+                <p>Exfoliates skin</p>
+              </div>
+              <div class="active-card">
+                <h4>Chamomile</h4>
+                <p>Soothes redness</p>
+              </div>
+            {% elsif is_serum %}
+              <div class="active-card">
+                <h4>Niacinamide 4%</h4>
+                <p>Controls sebum</p>
+              </div>
+              <div class="active-card">
+                <h4>Tranexamic 3%</h4>
+                <p>Acne Scars</p>
+              </div>
+              <div class="active-card">
+                <h4>Zinc PCA 1%</h4>
+                <p>Fights Acne</p>
+              </div>
+            {% else %}
+              <div class="active-card">
+                <h4>SPF 50+</h4>
+                <p>Broad Spectrum</p>
+              </div>
+              <div class="active-card">
+                <h4>PA++++</h4>
+                <p>UVA/UVB Shield</p>
+              </div>
+              <div class="active-card">
+                <h4>Niacinamide 2%</h4>
+                <p>Barrier repairs</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- 2. Clinical Study Results -->
+        <div class="clinical-box">
+          <h3>Clinically Proven Efficacy</h3>
+          {% if is_facewash %}
+            <div class="clinical-item">
+              <div class="clinical-meta"><span>Sebum &amp; Oil control</span><span class="pct">94%</span></div>
+              <div class="clinical-bar-bg"><div class="clinical-bar-fill" data-pct="94"></div></div>
+            </div>
+            <div class="clinical-item">
+              <div class="clinical-meta"><span>Pollution &amp; Dirt removal</span><span class="pct">97%</span></div>
+              <div class="clinical-bar-bg"><div class="clinical-bar-fill" data-pct="97"></div></div>
+            </div>
+          {% elsif is_serum %}
+            <div class="clinical-item">
+              <div class="clinical-meta"><span>Acne scar reduction (in 4 weeks)</span><span class="pct">88%</span></div>
+              <div class="clinical-bar-bg"><div class="clinical-bar-fill" data-pct="88"></div></div>
+            </div>
+            <div class="clinical-item">
+              <div class="clinical-meta"><span>Barrier repair &amp; hydration</span><span class="pct">92%</span></div>
+              <div class="clinical-bar-bg"><div class="clinical-bar-fill" data-pct="92"></div></div>
+            </div>
+          {% else %}
+            <div class="clinical-item">
+              <div class="clinical-meta"><span>UV Protection with zero white cast</span><span class="pct">98%</span></div>
+              <div class="clinical-bar-bg"><div class="clinical-bar-fill" data-pct="98"></div></div>
+            </div>
+            <div class="clinical-item">
+              <div class="clinical-meta"><span>Sweat &amp; Water resistance</span><span class="pct">91%</span></div>
+              <div class="clinical-bar-bg"><div class="clinical-bar-fill" data-pct="91"></div></div>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- 3. Routine Timeline Guide -->
+        <div class="routine-timeline">
+          <h3>How to Incorporate</h3>
+          <div class="timeline-steps">
+            <div class="timeline-step">
+              <div class="timeline-dot">1</div>
+              <div class="timeline-info">
+                <h4>Dispense &amp; Apply</h4>
+                {% if is_facewash %}
+                  <p>Squeeze a coin-sized amount onto wet palms. Gently massage in circular motions for 30 seconds, focusing on the T-zone.</p>
+                {% elsif is_serum %}
+                  <p>Apply 2-3 drops of the active serum onto clean, damp face. Pat gently (do not rub) until fully absorbed.</p>
+                {% else %}
+                  <p>Apply 2 finger-lengths of sunscreen evenly onto face and neck as the final step of your morning skincare routine.</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="timeline-dot">2</div>
+              <div class="timeline-info">
+                <h4>Frequency</h4>
+                {% if is_facewash %}
+                  <p>Use twice daily (Morning and Night) for optimal dirt extraction and oil regulation.</p>
+                {% elsif is_serum %}
+                  <p>Incorporate daily into your evening routine. Follow up with a light moisturizer if needed.</p>
+                {% else %}
+                  <p>Apply daily in the morning, at least 15 minutes before stepping out into direct sun exposure. Reapply every 4 hours if sweating outdoors.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Add to Cart Form -->
+        <div style="border-top: 1px solid var(--border-warm); padding-top: 2rem; margin-top: 2rem;">
+          <form action="/cart/add" method="post" enctype="multipart/form-data" id="productForm">
+            <input type="hidden" name="id" id="mainVariantId" value="{{ product.variants.first.id }}">
+            
+            <div class="qty-picker-container">
+              <span style="font-weight: 700; color: var(--charcoal); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Quantity</span>
+              <div class="qty-selector">
+                <button type="button" onclick="adjustMainQty(-1)">−</button>
+                <span class="qty-value" id="mainQtyDisplay">1</span>
+                <button type="button" onclick="adjustMainQty(1)">+</button>
+              </div>
+            </div>
+            <input type="hidden" name="quantity" id="mainQtyInput" value="1">
+            
+            <button type="submit" 
+                    class="btn btn-hero-cta add-to-cart-btn" 
+                    data-variant-id="{{ product.variants.first.id }}" 
+                    data-name="{{ product.title }}" 
+                    style="width: 100%; border: none; padding: 1.3rem; border-radius: 100px; cursor: pointer; text-align: center; display: block; font-family: var(--font-heading); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1.5rem; transition: var(--transition-spring);">
+              ADD TO ROUTINE +
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 4. upsell Product recommendations section -->
+    <div class="upsell-section">
+      <h3>Complete Your Routine</h3>
+      <div class="upsell-grid">
+        {% assign count = 0 %}
+        {% for other_prod in collections.all.products %}
+          {% if other_prod.handle != product.handle and count < 2 %}
+            {% assign count = count | plus: 1 %}
+            <div class="upsell-card">
+              <div class="upsell-img-box">
+                <img src="{{ other_prod.featured_image | image_url: width: 200 }}" alt="{{ other_prod.title }}">
+              </div>
+              <div class="upsell-info">
+                <h4>{{ other_prod.title }}</h4>
+                <p>{{ other_prod.price | money }}</p>
+                <button class="add-to-cart-btn" 
+                        data-variant-id="{{ other_prod.variants.first.id }}" 
+                        data-name="{{ other_prod.title }}"
+                        style="background: var(--charcoal); color: var(--cream); border: none; border-radius: 100px; padding: 0.45rem 1rem; font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: 0.3s;">
+                  Quick Add +
+                </button>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+        
+        <!-- Static fallbacks if collection/all has no other products -->
+        {% if count == 0 %}
+          <div class="upsell-card">
+            <div class="upsell-img-box">
+              <img src="{{ 'Transparent_Facewash.png' | asset_img_url: '150x' }}" alt="MS Clear Facewash">
+            </div>
+            <div class="upsell-info">
+              <h4>Multi Active MS Clear</h4>
+              <p>₹349.00</p>
+              <button class="add-to-cart-btn" data-variant-id="{% if facewash_product != blank %}{{ facewash_product.first_available_variant.id }}{% endif %}" data-name="Multi Active MS Clear" style="background: var(--charcoal); color: var(--cream); border: none; border-radius: 100px; padding: 0.45rem 1rem; font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: 0.3s;">
+                Quick Add +
+              </button>
+            </div>
+          </div>
+          <div class="upsell-card">
+            <div class="upsell-img-box">
+              <img src="{{ 'Transparent_Serum.png' | asset_img_url: '150x' }}" alt="MS Treat Serum">
+            </div>
+            <div class="upsell-info">
+              <h4>Multi Active MS Treat</h4>
+              <p>₹599.00</p>
+              <button class="add-to-cart-btn" data-variant-id="{% if serum_product != blank %}{{ serum_product.first_available_variant.id }}{% endif %}" data-name="Multi Active MS Treat" style="background: var(--charcoal); color: var(--cream); border: none; border-radius: 100px; padding: 0.45rem 1rem; font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: 0.3s;">
+                Quick Add +
+              </button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Animate clinical progress bars on scroll reveal
+    const fills = document.querySelectorAll('.clinical-bar-fill');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fill = entry.target;
+          fill.style.width = fill.dataset.pct + '%';
+          observer.unobserve(fill);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    fills.forEach(fill => observer.observe(fill));
+  });
+
+  // Quantity control
+  function adjustMainQty(change) {
+    const display = document.getElementById('mainQtyDisplay');
+    const input = document.getElementById('mainQtyInput');
+    let val = parseInt(input.value) + change;
+    if (val < 1) val = 1;
+    display.textContent = val;
+    input.value = val;
+  }
+
+  // Override standard product form submit to use AJAX Cart Drawer
+  const productForm = document.getElementById('productForm');
+  if (productForm) {
+    productForm.addEventListener('submit', (e) => {
+      const isAjaxDrawerActive = !!document.getElementById('cartDrawer');
+      if (isAjaxDrawerActive) {
+        e.preventDefault();
+        
+        const variantId = document.getElementById('mainVariantId').value;
+        const qty = parseInt(document.getElementById('mainQtyInput').value);
+        const productName = "{{ product.title }}";
+        const btn = productForm.querySelector('.add-to-cart-btn');
+
+        if (!variantId || variantId.trim() === "") {
+          if (typeof window.triggerToast === 'function') {
+            window.triggerToast(`⚠️ <strong>Variant missing!</strong> Please create product handles first.`);
+          } else {
+            alert("Product Variant ID missing.");
+          }
+          return;
+        }
+
+        if (btn.classList.contains('adding') || btn.classList.contains('added')) return;
+
+        const originalText = btn.innerHTML;
+        btn.classList.add('adding');
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: [{ id: variantId, quantity: qty }] })
+        })
+        .then(res => res.json())
+        .then(itemData => {
+          btn.classList.remove('adding');
+          if (itemData.description) {
+            alert(itemData.description);
+            btn.innerHTML = originalText;
+          } else {
+            btn.classList.add('added');
+            btn.innerHTML = `
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            `;
+            
+            if (typeof window.updateCartCount === 'function') {
+              window.updateCartCount();
+            }
+            if (typeof window.openCartDrawer === 'function') {
+              window.openCartDrawer();
+            }
+
+            setTimeout(() => {
+              btn.classList.remove('added');
+              btn.innerHTML = originalText;
+            }, 2000);
+          }
+        })
+        .catch(err => {
+          console.error("Error adding product via AJAX:", err);
+          btn.classList.remove('adding');
+          btn.innerHTML = originalText;
+        });
+      }
+    });
+  }
+</script>

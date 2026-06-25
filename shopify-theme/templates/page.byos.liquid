@@ -1,0 +1,423 @@
+{% assign facewash_product = all_products['facewash'] %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['multi-active-ms-clear'] %}{% endif %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['ms-clear-facewash'] %}{% endif %}
+{% if facewash_product == blank %}{% assign facewash_product = all_products['ms-clear'] %}{% endif %}
+
+{% assign serum_product = all_products['serum'] %}
+{% if serum_product == blank %}{% assign serum_product = all_products['multi-active-ms-treat'] %}{% endif %}
+{% if serum_product == blank %}{% assign serum_product = all_products['ms-treat-serum'] %}{% endif %}
+{% if serum_product == blank %}{% assign serum_product = all_products['ms-treat'] %}{% endif %}
+
+{% assign sunscreen_product = all_products['sunscreen'] %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['multi-active-ms-protect'] %}{% endif %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['ms-protect-sunscreen'] %}{% endif %}
+{% if sunscreen_product == blank %}{% assign sunscreen_product = all_products['ms-protect'] %}{% endif %}
+
+{% assign gift_wrap_product = all_products['gift-wrap'] %}
+{% if gift_wrap_product == blank %}{% assign gift_wrap_product = all_products['gift-wrap-format'] %}{% endif %}
+{% if gift_wrap_product == blank %}{% assign gift_wrap_product = all_products['premium-gift-format'] %}{% endif %}
+{% if gift_wrap_product == blank %}{% assign gift_wrap_product = all_products['gift-sleeve'] %}{% endif %}
+
+{% if facewash_product == blank or serum_product == blank or sunscreen_product == blank or gift_wrap_product == blank %}
+  {% for product in collections.all.products %}
+    {% assign handle_down = product.handle | downcase %}
+    {% assign title_down = product.title | downcase %}
+    {% if handle_down contains 'facewash' or handle_down contains 'clear' or title_down contains 'facewash' or title_down contains 'face wash' or title_down contains 'clear' %}
+      {% if facewash_product == blank %}{% assign facewash_product = product %}{% endif %}
+    {% elsif handle_down contains 'serum' or handle_down contains 'treat' or title_down contains 'serum' or title_down contains 'treat' %}
+      {% if serum_product == blank %}{% assign serum_product = product %}{% endif %}
+    {% elsif handle_down contains 'sunscreen' or handle_down contains 'protect' or title_down contains 'sunscreen' or title_down contains 'protect' %}
+      {% if sunscreen_product == blank %}{% assign sunscreen_product = product %}{% endif %}
+    {% elsif handle_down contains 'gift' or title_down contains 'gift' or title_down contains 'wrap' %}
+      {% if gift_wrap_product == blank %}{% assign gift_wrap_product = product %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<!-- ═══════════════════════════════════════════════
+     B.Y.O.S. — BUILD YOUR OWN SET
+     ═══════════════════════════════════════════════ -->
+<section class="byos" id="byos" style="padding-top: 10rem;">
+  <div class="bg-watermark">BUILD</div>
+  <div class="container">
+    <div class="byos-header reveal">
+      <span class="eyebrow">CUSTOMISE YOUR SERIES</span>
+      <h2 style="font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 1rem; line-height: 1;">
+        <span class="line-normal">Build your</span>
+        <span class="line-italic">own series</span>
+      </h2>
+      <p>Handpick the products that match your skin goals. Get a bundled discount when you choose 2 or more.</p>
+    </div>
+
+    <!-- BYOS Image Showcase Banner -->
+    <div class="byos-hero-banner reveal">
+      <div class="byos-banner-content">
+        <span class="byos-banner-eyebrow">THE ULTIMATE SKINSET</span>
+        <h3 class="byos-banner-title">The Perfect Gift for the Men in Your Life</h3>
+        <p class="byos-banner-desc">Create a custom skincare routine, select our premium emotional gift format for your father, brother, or partner, and add a personalized handwritten card. Grooming made thoughtful.</p>
+      </div>
+      <img src="{{ 'byos.png' | asset_img_url: '800x' }}" alt="Build Your Own Set" class="byos-banner-img">
+    </div>
+
+    <div class="byos-wrapper">
+      <!-- Step 1: Select Products & Step 2: Gift Selection in Column 1 -->
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <!-- Step 1: Choose Products -->
+        <div class="byos-step reveal">
+          <div class="byos-step-header">
+            <div class="step-num">01</div>
+            <div>
+              <h3>Choose Your Products</h3>
+              <p>Select the products that target your concerns</p>
+            </div>
+          </div>
+          <div class="byos-selector">
+            <!-- Facewash -->
+            <div class="byos-product-tile" 
+                 data-byos-id="fw" 
+                 data-variant-id="{% if facewash_product != blank %}{{ facewash_product.first_available_variant.id }}{% endif %}" 
+                 data-name="{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}" 
+                 data-price="{% if facewash_product != blank %}{{ facewash_product.price | money_without_currency | replace: ',', '' }}{% else %}349{% endif %}" 
+                 onclick="toggleByos(this)">
+              <div class="byos-tile-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              {% if facewash_product != blank %}
+                <img src="{{ facewash_product.featured_image | image_url: width: 300 }}" alt="{{ facewash_product.title }}" class="byos-tile-img">
+              {% else %}
+                <img src="{{ 'Transparent_Facewash.png' | asset_img_url: '400x' }}" alt="Multi Active MS Clear" class="byos-tile-img">
+              {% endif %}
+              <div class="byos-tile-info">
+                <span>{% if facewash_product != blank %}{{ facewash_product.title }}{% else %}Multi Active MS Clear{% endif %}</span>
+                <strong>{% if facewash_product != blank %}{{ facewash_product.price | money_without_trailing_zeros }}{% else %}₹349{% endif %}</strong>
+              </div>
+            </div>
+
+            <!-- Serum -->
+            <div class="byos-product-tile" 
+                 data-byos-id="sr" 
+                 data-variant-id="{% if serum_product != blank %}{{ serum_product.first_available_variant.id }}{% endif %}" 
+                 data-name="{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}" 
+                 data-price="{% if serum_product != blank %}{{ serum_product.price | money_without_currency | replace: ',', '' }}{% else %}599{% endif %}" 
+                 onclick="toggleByos(this)">
+              <div class="byos-tile-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              {% if serum_product != blank %}
+                <img src="{{ serum_product.featured_image | image_url: width: 300 }}" alt="{{ serum_product.title }}" class="byos-tile-img">
+              {% else %}
+                <img src="{{ 'Transparent_Serum.png' | asset_img_url: '400x' }}" alt="Multi Active MS Treat" class="byos-tile-img">
+              {% endif %}
+              <div class="byos-tile-info">
+                <span>{% if serum_product != blank %}{{ serum_product.title }}{% else %}Multi Active MS Treat{% endif %}</span>
+                <strong>{% if serum_product != blank %}{{ serum_product.price | money_without_trailing_zeros }}{% else %}₹599{% endif %}</strong>
+              </div>
+            </div>
+
+            <!-- Sunscreen -->
+            <div class="byos-product-tile" 
+                 data-byos-id="ss" 
+                 data-variant-id="{% if sunscreen_product != blank %}{{ sunscreen_product.first_available_variant.id }}{% endif %}" 
+                 data-name="{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}" 
+                 data-price="{% if sunscreen_product != blank %}{{ sunscreen_product.price | money_without_currency | replace: ',', '' }}{% else %}549{% endif %}" 
+                 onclick="toggleByos(this)">
+              <div class="byos-tile-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              {% if sunscreen_product != blank %}
+                <img src="{{ sunscreen_product.featured_image | image_url: width: 300 }}" alt="{{ sunscreen_product.title }}" class="byos-tile-img">
+              {% else %}
+                <img src="{{ 'Transparent_Sunscreen.png' | asset_img_url: '400x' }}" alt="Multi Active MS Protect" class="byos-tile-img">
+              {% endif %}
+              <div class="byos-tile-info">
+                <span>{% if sunscreen_product != blank %}{{ sunscreen_product.title }}{% else %}Multi Active MS Protect{% endif %}</span>
+                <strong>{% if sunscreen_product != blank %}{{ sunscreen_product.price | money_without_trailing_zeros }}{% else %}₹549{% endif %}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Gift Wrap Format Selection -->
+        <div class="byos-step reveal">
+          <div class="byos-step-header">
+            <div class="step-num">02</div>
+            <div>
+              <h3>Add a Gift Format (Optional)</h3>
+              <p>Send it in a premium eco-wrap with an emotional care card printed with your custom note (+ ₹49)</p>
+            </div>
+          </div>
+          
+          <div class="gift-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <!-- Father -->
+            <div class="gift-tile" data-gift-id="father" onclick="toggleGift('father')" style="border: 1.5px solid var(--border-warm); border-radius: 16px; padding: 1.2rem; cursor: pointer; background: var(--cream); transition: var(--transition-spring); display: flex; flex-direction: column; gap: 0.4rem; position: relative;">
+              <div class="gift-check" style="position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-warm); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: transparent; background: transparent; transition: var(--transition-smooth);">✓</div>
+              <span style="font-size: 1.2rem;">👴</span>
+              <strong style="font-family: var(--font-heading); font-size: 0.9rem; color: var(--charcoal); margin-top: 0.2rem;">For Father</strong>
+              <span style="font-size: 0.72rem; color: var(--muted); line-height: 1.4;">"To the man who taught me strength, here's to healthy skin." Eco-wrap &amp; card.</span>
+            </div>
+            <!-- Brother -->
+            <div class="gift-tile" data-gift-id="brother" onclick="toggleGift('brother')" style="border: 1.5px solid var(--border-warm); border-radius: 16px; padding: 1.2rem; cursor: pointer; background: var(--cream); transition: var(--transition-spring); display: flex; flex-direction: column; gap: 0.4rem; position: relative;">
+              <div class="gift-check" style="position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-warm); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: transparent; background: transparent; transition: var(--transition-smooth);">✓</div>
+              <span style="font-size: 1.2rem;">👦</span>
+              <strong style="font-family: var(--font-heading); font-size: 0.9rem; color: var(--charcoal); margin-top: 0.2rem;">For Brother</strong>
+              <span style="font-size: 0.72rem; color: var(--muted); line-height: 1.4;">"Stop stealing my face wash. Here is your own set, champ." Hilarious loving tag.</span>
+            </div>
+            <!-- Husband -->
+            <div class="gift-tile" data-gift-id="husband" onclick="toggleGift('husband')" style="border: 1.5px solid var(--border-warm); border-radius: 16px; padding: 1.2rem; cursor: pointer; background: var(--cream); transition: var(--transition-spring); display: flex; flex-direction: column; gap: 0.4rem; position: relative;">
+              <div class="gift-check" style="position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-warm); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: transparent; background: transparent; transition: var(--transition-smooth);">✓</div>
+              <span style="font-size: 1.2rem;">🤵</span>
+              <strong style="font-family: var(--font-heading); font-size: 0.9rem; color: var(--charcoal); margin-top: 0.2rem;">For Husband / Partner</strong>
+              <span style="font-size: 0.72rem; color: var(--muted); line-height: 1.4;">"To my forever partner, care you deserve." Luxury gold-embossed sleeve.</span>
+            </div>
+            <!-- Friend -->
+            <div class="gift-tile" data-gift-id="friend" onclick="toggleGift('friend')" style="border: 1.5px solid var(--border-warm); border-radius: 16px; padding: 1.2rem; cursor: pointer; background: var(--cream); transition: var(--transition-spring); display: flex; flex-direction: column; gap: 0.4rem; position: relative;">
+              <div class="gift-check" style="position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-warm); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: transparent; background: transparent; transition: var(--transition-smooth);">✓</div>
+              <span style="font-size: 1.2rem;">🤝</span>
+              <strong style="font-family: var(--font-heading); font-size: 0.9rem; color: var(--charcoal); margin-top: 0.2rem;">For Friend</strong>
+              <span style="font-size: 0.72rem; color: var(--muted); line-height: 1.4;">"A premium routine for the best buddy who has my back." Matte wrapping.</span>
+            </div>
+          </div>
+
+          <!-- Handwritten Note Box -->
+          <div id="giftNoteSection" style="display: none; animation: fadeUp 0.4s ease-out;">
+            <label for="giftNote" style="font-family: var(--font-heading); font-size: 0.85rem; font-weight: 700; color: var(--charcoal); display: block; margin-bottom: 0.5rem;">Custom Message on Card (Optional)</label>
+            <textarea id="giftNote" rows="2" placeholder="Write a short personal note to print on the care card..." style="width: 100%; border: 1.5px solid var(--border-warm); border-radius: 12px; padding: 0.8rem; font-family: var(--font-body); font-size: 0.85rem; outline: none; transition: border-color 0.3s; background: var(--cream); resize: vertical;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Summary Column -->
+      <div class="byos-summary reveal">
+        <div class="byos-step-header">
+          <div class="step-num">03</div>
+          <div>
+            <h3>Your Custom Set</h3>
+            <p>Bundle savings applied automatically</p>
+          </div>
+        </div>
+        <div class="byos-summary-box" id="byosSummary">
+          <div class="byos-empty-state" id="byosEmpty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p>Select at least one product to begin building your set.</p>
+          </div>
+          <div class="byos-selected-items" id="byosItems"></div>
+          <div class="byos-pricing" id="byosPricing" style="display:none">
+            <div class="byos-price-row">
+              <span>Subtotal</span>
+              <span id="byosSubtotal">₹0</span>
+            </div>
+            <div class="byos-price-row discount">
+              <span id="byosDiscountLabel">Bundle Discount</span>
+              <span id="byosDiscount" class="discount-val">−₹0</span>
+            </div>
+            <div class="byos-price-row" id="byosGiftRow" style="display:none;">
+              <span id="byosGiftLabel">Gift Wrap (For Brother)</span>
+              <span id="byosGiftPrice">₹49</span>
+            </div>
+            <div class="byos-price-row total">
+              <span>You Pay</span>
+              <span id="byosTotal">₹0</span>
+            </div>
+          </div>
+          <button class="byos-cta" id="byosAddBtn" style="display:none" data-gift-wrap-variant="{% if gift_wrap_product != blank %}{{ gift_wrap_product.first_available_variant.id }}{% endif %}" onclick="addByosToCart()">Add Set to Routine →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BYOS Helper Script -->
+<script>
+  let byosCart = [];
+  let selectedGift = null;
+
+  function toggleByos(tile) {
+    const tileId = tile.dataset.byosId;
+    const variantId = tile.dataset.variantId;
+    const name = tile.dataset.name;
+    const price = parseInt(tile.dataset.price);
+
+    tile.classList.toggle('selected');
+    
+    if (tile.classList.contains('selected')) {
+      byosCart.push({ id: tileId, variantId, name, price });
+    } else {
+      byosCart = byosCart.filter(item => item.id !== tileId);
+    }
+    
+    updateByosSummary();
+  }
+
+  function toggleGift(giftId) {
+    const tiles = document.querySelectorAll('.gift-tile');
+    const noteSection = document.getElementById('giftNoteSection');
+    
+    if (selectedGift === giftId) {
+      // Deselect
+      selectedGift = null;
+      tiles.forEach(tile => tile.classList.remove('selected'));
+      if (noteSection) noteSection.style.display = 'none';
+    } else {
+      // Select new
+      selectedGift = giftId;
+      tiles.forEach(tile => {
+        if (tile.dataset.giftId === giftId) {
+          tile.classList.add('selected');
+        } else {
+          tile.classList.remove('selected');
+        }
+      });
+      if (noteSection) noteSection.style.display = 'block';
+    }
+    
+    updateByosSummary();
+  }
+
+  function updateByosSummary() {
+    const emptyState = document.getElementById('byosEmpty');
+    const itemsContainer = document.getElementById('byosItems');
+    const pricingContainer = document.getElementById('byosPricing');
+    const addBtn = document.getElementById('byosAddBtn');
+
+    if (byosCart.length === 0) {
+      emptyState.style.display = 'flex';
+      itemsContainer.style.display = 'none';
+      pricingContainer.style.display = 'none';
+      addBtn.style.display = 'none';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    itemsContainer.style.display = 'block';
+    pricingContainer.style.display = 'block';
+    addBtn.style.display = 'block';
+
+    itemsContainer.innerHTML = '';
+    let rawSubtotal = 0;
+
+    byosCart.forEach(item => {
+      rawSubtotal += item.price;
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.justifyContent = 'space-between';
+      row.style.padding = '0.5rem 0';
+      row.style.fontSize = '0.88rem';
+      row.style.color = 'var(--charcoal)';
+      row.innerHTML = `<span>${item.name}</span><strong>₹${item.price}</strong>`;
+      itemsContainer.appendChild(row);
+    });
+
+    // Bundle Discounts (Calculated locally for UI summary display)
+    const discountPct = byosCart.length === 3 ? 15 : (byosCart.length === 2 ? 10 : 0);
+    const discountAmt = Math.round((rawSubtotal * discountPct) / 100);
+    
+    document.getElementById('byosSubtotal').textContent = `₹${rawSubtotal}`;
+    
+    const discountRow = document.querySelector('.byos-price-row.discount');
+    if (discountAmt > 0) {
+      discountRow.style.display = 'flex';
+      document.getElementById('byosDiscountLabel').textContent = `Bundle Discount (${discountPct}% off)`;
+      document.getElementById('byosDiscount').textContent = `−₹${discountAmt}`;
+    } else {
+      discountRow.style.display = 'none';
+    }
+
+    // Gift Wrap
+    const giftRow = document.getElementById('byosGiftRow');
+    let giftPrice = 0;
+    if (selectedGift) {
+      giftPrice = 49;
+      giftRow.style.display = 'flex';
+      const capitalizedGift = selectedGift.charAt(0).toUpperCase() + selectedGift.slice(1);
+      document.getElementById('byosGiftLabel').textContent = `Premium Sleeve (For ${capitalizedGift})`;
+      document.getElementById('byosGiftPrice').textContent = `₹49`;
+    } else {
+      giftRow.style.display = 'none';
+    }
+
+    const finalTotal = rawSubtotal - discountAmt + giftPrice;
+    document.getElementById('byosTotal').textContent = `₹${finalTotal}`;
+  }
+
+  // Add BYOS bundle to Shopify Cart
+  function addByosToCart() {
+    if (byosCart.length === 0) return;
+    
+    const btn = document.getElementById('byosAddBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Adding Set to Routine...';
+
+    const cartItems = [];
+    const giftNote = document.getElementById('giftNote') ? document.getElementById('giftNote').value : '';
+
+    byosCart.forEach(item => {
+      const lineItem = {
+        id: item.variantId,
+        quantity: 1
+      };
+      
+      if (selectedGift) {
+        lineItem.properties = {
+          'Gift Sleeve Recipient': selectedGift.charAt(0).toUpperCase() + selectedGift.slice(1),
+          'Gift Care Card Message': giftNote || 'Custom Care Set'
+        };
+      }
+      cartItems.push(lineItem);
+    });
+
+    // Check if gift wrap is selected and has a product ID
+    const giftVariantId = btn.dataset.giftWrapVariant;
+    if (selectedGift && giftVariantId) {
+      cartItems.push({
+        id: giftVariantId,
+        quantity: 1,
+        properties: {
+          'Sleeve Target': selectedGift.charAt(0).toUpperCase() + selectedGift.slice(1),
+          'Message': giftNote
+        }
+      });
+    }
+
+    // Shopify AJAX add items
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ items: cartItems })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.description) {
+        // Shopify threw an error
+        alert('Error: ' + data.description);
+        btn.disabled = false;
+        btn.textContent = originalText;
+      } else {
+        // Success
+        btn.textContent = 'Set Added! Redirecting...';
+        // Vibrate if mobile
+        if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+        // Redirect to Cart page
+        window.location.href = '/cart';
+      }
+    })
+    .catch(error => {
+      console.error('Error adding bundle to cart:', error);
+      alert('Could not add to cart. Please try again.');
+      btn.disabled = false;
+      btn.textContent = originalText;
+    });
+  }
+</script>

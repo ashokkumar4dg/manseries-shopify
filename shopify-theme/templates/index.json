@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "hero": {
+      "type": "home-hero",
+      "settings": {}
+    },
+    "catalog": {
+      "type": "home-catalog",
+      "settings": {}
+    },
+    "reactor": {
+      "type": "home-reactor",
+      "settings": {}
+    },
+    "science": {
+      "type": "home-science",
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "home-testimonials",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "catalog",
+    "reactor",
+    "science",
+    "testimonials"
+  ]
+}

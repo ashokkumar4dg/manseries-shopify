@@ -1,0 +1,44 @@
+<style>
+  #hero.hero {
+    background-image: url("{{ 'desktop_banner.png' | asset_img_url: '1600x' }}");
+  }
+  @media (max-width: 767px) {
+    #hero.hero {
+      background-image: url("{{ 'mobile_banner.png' | asset_img_url: '800x' }}");
+    }
+  }
+</style>
+
+<section class="hero" id="hero">
+  <!-- Clickable overlay to redirect to product page when clicking empty image area -->
+  <a href="/pages/series" class="hero-clickable-overlay" aria-label="Shop the Series Now"></a>
+  
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <h1>
+          <span class="line-normal hero-line">Fewer Products.</span>
+          <span class="line-italic hero-line">Healthier Skin.</span>
+        </h1>
+        <p class="hero-desc hero-line" style="opacity: 0; pointer-events: none; user-select: none;" aria-hidden="true">
+          Science-backed multi-functional skincare formulated for Indian men. 3 products. Transparent actives.
+        </p>
+        <div class="hero-actions hero-line">
+          <a href="/pages/series" class="btn btn-hero-cta">SHOP NOW</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home Hero",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Home Hero"
+    }
+  ]
+}
+{% endschema %}

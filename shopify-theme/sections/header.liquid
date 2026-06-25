@@ -1,0 +1,82 @@
+<header class="navbar {% unless template == 'index' %}navbar-light-page{% endunless %}" id="navbar">
+  <div class="container navbar-container">
+    <div class="nav-brand">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Menu">
+        <svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <a href="{{ routes.root_url }}" class="logo" aria-label="Man Series Home">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" class="logo-img">
+        {% else %}
+          <img src="{{ 'full_logo.png' | asset_url }}" alt="Man Series" class="logo-img">
+        {% endif %}
+      </a>
+    </div>
+
+    <nav class="nav-menu" id="navMenu">
+      <ul class="nav-links">
+        {% for link in linklists.main-menu.links %}
+          {% assign is_active = false %}
+          {% if link.active %}
+            {% assign is_active = true %}
+          {% elsif request.path == link.url %}
+            {% assign is_active = true %}
+          {% elsif request.path contains link.url and link.url != '/' and link.url != '' %}
+            {% assign is_active = true %}
+          {% endif %}
+          <li>
+            <a href="{{ link.url }}" class="{% if is_active %}nav-active{% endif %}">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="search-trigger" id="searchTrigger" aria-label="Open Search">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}" class="account-trigger" aria-label="My Account" style="margin-right: 5px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+      {% endif %}
+
+      <button class="cart-trigger" id="cartTrigger" aria-label="Open Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" id="cartBadgeCount">{{ cart.item_count }}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom Logo Image"
+    }
+  ]
+}
+{% endschema %}
